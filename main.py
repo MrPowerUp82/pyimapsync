@@ -17,9 +17,11 @@ def clear():
 def get_mailbox(From,To):
     for x in From.list()[1]:
         name = x.decode().split('"."')[1].strip()
-        To.create(name)
-        from_server['box_names'].append(name)
-        to_server['box_names'].append(name)
+        if from_server['box_names'] == []:
+            from_server['box_names'].append(name)
+        if to_server['box_names'] == []:
+            to_server['box_names'].append(name)
+            To.create(name)
 
 def connect_server(server):
     conn = imaplib.IMAP4_SSL(server['server']) 
