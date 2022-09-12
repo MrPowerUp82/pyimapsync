@@ -1,0 +1,7 @@
+test.py
+*.spec
+__pycache__/
+build/
+dist/
+*.exe
+temp/

@@ -1,0 +1,9 @@
+from_server = {'server': '1.1.1.1',
+               'username': '',
+               'password': '',
+               'box_names': []}
+
+to_server = {'server': '2.2.2.2',
+             'username': '',
+             'password': '',
+             'box_names': []}
