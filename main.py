@@ -19,7 +19,7 @@ def get_mailbox(From,To):
         name = x.decode().split('"."')[1].strip()
         if from_server['box_names'] == []:
             from_server['box_names'].append(name)
-        if to_server['box_names'] == []:
+            to_server['box_names']=[]
             to_server['box_names'].append(name)
             To.create(name)
 
