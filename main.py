@@ -54,6 +54,12 @@ if __name__ == '__main__':
 
         char_='='
 
+        try:
+            to_server['box_names'][idx]
+        except:
+            To.create(box)
+            to_server['box_names'].append(box)
+
         for idy,msg_num in enumerate(msg_nums):
             idy_ = idy +1
             buffer = int((idy_/length_data)*100)*char_
@@ -62,8 +68,11 @@ if __name__ == '__main__':
             message = data[0][1] 
             flags = imaplib.ParseFlags(data[0][0]) # get flags
             flag_str = " ".join([x.decode('utf-8') for x in flags])
-            date = imaplib.Time2Internaldate(imaplib.Internaldate2tuple(data[0][0])) #get date
-            copy_result = To.append(to_server['box_names'][idx], flag_str, date, message) # copy to archive
+            try:
+                date = imaplib.Time2Internaldate(imaplib.Internaldate2tuple(data[0][0])) #get date
+            except:
+                continue
+            copy_result = To.append(to_server['box_names'][idx], flag_str.upper().replace('RECENT', ''), date, message) # copy to archive
 
             if copy_result[0] == 'OK':
                 #del_msg = From.store(msg_num, '+FLAGS', '\\Seen') # mark for deletion
@@ -80,7 +89,7 @@ if __name__ == '__main__':
         else:
             print(f'expunge count: {len(ex[1])}')
 
-        disconnect_server(From)
-        disconnect_server(To)
+    disconnect_server(From)
+    disconnect_server(To)
 
-input('Press any key to exit!')
+    input('Press any key to exit!')
