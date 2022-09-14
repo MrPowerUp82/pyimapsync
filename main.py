@@ -39,7 +39,11 @@ if __name__ == '__main__':
     get_mailbox(From, To)
 
     for idx,box in enumerate(from_server['box_names']):
-        box_select = From.select(box, readonly = False)  #open box which will have its contents copied
+        try:
+            box_select = From.select(box, readonly = False)  #open box which will have its contents copied
+        except:
+            print(f'MailBox \'{box}\' not exists!')
+            continue
         #box_select = From.select()  #open box which will have its contents copied
         print(f'Fetching messages from \'{box}\'...')
         resp, items = From.search(None, 'ALL')
