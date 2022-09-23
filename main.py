@@ -1,8 +1,18 @@
-import imaplib, os,platform
+import imaplib, os,platform, sys
 
 from_server = {}
 
 to_server = {}
+
+point_msg = None
+
+if sys.argv:
+    try:
+        sys.argv[1] = int(sys.argv[1])
+        assert type(sys.argv[1]) == int, u'Erro, formato de idx inválido!'
+        point_msg = sys.argv[1]
+    except:
+        point_msg = None
 
 arq = open('cfg.txt','r').read()
 
@@ -60,25 +70,34 @@ if __name__ == '__main__':
             To.create(box)
             to_server['box_names'].append(box)
 
+        if point_msg is not None:
+            msg_nums = msg_nums[point_msg-1:]
+            length_data = len(msg_nums)
+
         for idy,msg_num in enumerate(msg_nums):
-            idy_ = idy +1
-            buffer = int((idy_/length_data)*100)*char_
-            print('['+buffer.ljust(100)+']',f' {int((idy_/length_data)*100)}%')
-            resp, data = From.fetch(msg_num, "(FLAGS INTERNALDATE BODY.PEEK[])") # get email
-            message = data[0][1] 
-            flags = imaplib.ParseFlags(data[0][0]) # get flags
-            flag_str = " ".join([x.decode('utf-8') for x in flags])
             try:
-                date = imaplib.Time2Internaldate(imaplib.Internaldate2tuple(data[0][0])) #get date
+                idy_ = idy +1
+                buffer = int((idy_/length_data)*100)*char_
+                print(f'{length_data-idy_} messages to archive. (\'{box}\')')
+                print('['+buffer.ljust(100)+']',f' {int((idy_/length_data)*100)}%')
+                resp, data = From.fetch(msg_num, "(FLAGS INTERNALDATE BODY.PEEK[])") # get email
+                message = data[0][1] 
+                flags = imaplib.ParseFlags(data[0][0]) # get flags
+                flag_str = " ".join([x.decode('utf-8') for x in flags])
+                try:
+                    date = imaplib.Time2Internaldate(imaplib.Internaldate2tuple(data[0][0])) #get date
+                except:
+                    continue
+                copy_result = To.append(to_server['box_names'][idx], flag_str.upper().replace('RECENT', ''), date, message) # copy to archive
+
+                if copy_result[0] == 'OK':
+                    #del_msg = From.store(msg_num, '+FLAGS', '\\Seen') # mark for deletion
+                    del_msg = From.store(msg_num, '+FLAGS', '\\Seen')
+
+                clear()
             except:
+                clear()
                 continue
-            copy_result = To.append(to_server['box_names'][idx], flag_str.upper().replace('RECENT', ''), date, message) # copy to archive
-
-            if copy_result[0] == 'OK':
-                #del_msg = From.store(msg_num, '+FLAGS', '\\Seen') # mark for deletion
-                del_msg = From.store(msg_num, '+FLAGS', '\\Seen')
-
-            clear()
 
         #ex = From.expunge() # delete marked
         ex = From.expunge()
