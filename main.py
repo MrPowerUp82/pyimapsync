@@ -73,6 +73,8 @@ if __name__ == '__main__':
         if point_msg is not None:
             msg_nums = msg_nums[point_msg-1:]
             length_data = len(msg_nums)
+            clear()
+            print('[+]Reloading...[+]')
 
         for idy,msg_num in enumerate(msg_nums):
             try:
