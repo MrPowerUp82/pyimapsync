@@ -9,7 +9,7 @@ point_msg = None
 if sys.argv:
     try:
         sys.argv[1] = int(sys.argv[1])
-        assert type(sys.argv[1]) == int, u'Erro, formato de idx inválido!'
+        #assert type(sys.argv[1]) == int, u'Erro, formato de idx inválido!'
         point_msg = sys.argv[1]
     except:
         point_msg = None
