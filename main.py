@@ -26,10 +26,10 @@ def clear():
 
 def get_mailbox(From,To):
     if from_server['box_names'] == []:
+        to_server['box_names']=[]
         for x in From.list()[1]:
             name = x.decode().split('"."')[1].strip()
             from_server['box_names'].append(name)
-            to_server['box_names']=[]
             to_server['box_names'].append(name)
             To.create(name)
 
