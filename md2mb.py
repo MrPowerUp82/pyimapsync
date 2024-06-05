@@ -6,11 +6,6 @@ import email
 import os
 
 def maildir2mailbox(maildirname, mboxfilename):
-    """
-    Adaptado de maildir2mbox.py,
-    Nathan R. Yergler, 6 June 2010
-    http://yergler.net/blog/2010/06/06/batteries-included-or-maildir-to-mbox-again/
-    """
     # Abre o maildir existente e o arquivo mbox de destino
     maildir = mailbox.Maildir(maildirname, factory=email.message_from_binary_file)
     mbox = mailbox.mbox(mboxfilename)
